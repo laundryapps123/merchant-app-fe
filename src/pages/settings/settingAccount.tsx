@@ -27,6 +27,7 @@ import getCroppedImg from "../../lib/cropImage";
 import uploadIcon from "../../assets/images/upload.svg";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { DialogDescription } from "@radix-ui/react-dialog";
+import { Textarea } from "../../components/ui/textarea";
 
 interface ICroppedImageProps {
   imageSrc: string;
@@ -60,6 +61,7 @@ const SettingAccount = () => {
       .min(1, { message: "Email wajib diisi" })
       .email({ message: "Alamat email tidak valid" }),
     phoneNumber: z.string().min(1, { message: "No HP wajib diisi" }),
+    address: z.any(),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -69,6 +71,7 @@ const SettingAccount = () => {
       name: "",
       email: "",
       phoneNumber: "",
+      address: "",
     },
   });
 
@@ -202,7 +205,7 @@ const SettingAccount = () => {
             ></FormField>
           </div>
 
-          <div className="mb-5">
+          <div className="mb-3">
             <FormField
               control={form.control}
               name="phoneNumber"
@@ -212,6 +215,24 @@ const SettingAccount = () => {
 
                   <FormControl>
                     <Input id="phoneNumber" type="number" {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            ></FormField>
+          </div>
+
+          <div className="mb-5">
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Alamat</FormLabel>
+
+                  <FormControl>
+                    <Textarea id="address" {...field} />
                   </FormControl>
 
                   <FormMessage />
