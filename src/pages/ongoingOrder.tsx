@@ -11,7 +11,7 @@ const OngoingOrder = () => {
     setShowBackIcon(false);
   }, []);
   return (
-    <div>
+    <div className="mx-4">
       {/* make it fixed top */}
       <Input className="mb-5" placeholder="Pencarian No Nota & Nama..." />
 

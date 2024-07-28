@@ -24,7 +24,7 @@ const Layout = () => {
   };
 
   return (
-    <div className="bg-white w-[100vw] sm:w-[480px] h-[100vh] mx-auto my-0 relative">
+    <div className="bg-white w-[100vw] sm:w-[480px] min-h-[100vh] mx-auto my-0 relative">
       <div className="fixed top-0 bg-white w-[100vw] sm:w-[480px]">
         <div className="flex border-b-[1px] py-3 px-4 relative drop-shadow">
           <div className="absolute left-4">LOGO</div>
@@ -46,7 +46,7 @@ const Layout = () => {
       </div>
 
       <main
-        className={`${showTitle ? "mt-[7.188rem]" : "mt-[3.125rem]"} pb-20`}
+        className={`${showTitle ? "pt-[7.188rem]" : "pt-[3.125rem]"} pb-20`}
       >
         <Outlet />
       </main>
