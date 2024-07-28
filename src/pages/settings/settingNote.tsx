@@ -22,7 +22,7 @@ const SettingNote = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      note: "",
+      note: "1. \n2. \n3. ",
     },
   });
 
@@ -34,7 +34,28 @@ const SettingNote = () => {
   }, []);
 
   const submitForm = (values: z.infer<typeof formSchema>) => {
+    values.note = generateHtmlTemplate(values.note);
     console.log("submit", values);
+  };
+
+  const escapeRegExp = (str: string) => {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+  };
+
+  const replaceAll = (str: string, find: string, replace: string) => {
+    return str.replace(new RegExp(escapeRegExp(find), "g"), replace);
+  };
+
+  const generateHtmlTemplate = (value: string) => {
+    const list: string[] = value.split("\n");
+
+    return replaceAll(
+      `<ol>
+      ${list.map((singleList: string) => "<li>" + singleList + "</li>")}
+    </ol>`,
+      ",",
+      ""
+    );
   };
 
   return (
@@ -56,6 +77,8 @@ const SettingNote = () => {
               )}
             ></FormField>
           </div>
+
+          <div id="preview"></div>
 
           <Button className="w-full bg-watermelon-2" type="submit">
             Simpan
