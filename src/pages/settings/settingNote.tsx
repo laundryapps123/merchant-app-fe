@@ -78,8 +78,6 @@ const SettingNote = () => {
             ></FormField>
           </div>
 
-          <div id="preview"></div>
-
           <Button className="w-full bg-watermelon-2" type="submit">
             Simpan
           </Button>

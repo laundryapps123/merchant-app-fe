@@ -12,7 +12,10 @@ import SettingNote from "./pages/settings/settingNote.tsx";
 import SettingAbout from "./pages/settings/settingAbout.tsx";
 import SettingFaq from "./pages/settings/settingFaq.tsx";
 import SettingContactUs from "./pages/settings/settingContactUs.tsx";
-import SettingDuration from "./pages/settings/settingDuration.tsx";
+import SettingDuration from "./pages/settings/setting-duration/settingDuration.tsx";
+import SettingDurationForm from "./pages/settings/setting-duration/settingDurationForm.tsx";
+import SettingService from "./pages/settings/setting-service/settingService.tsx";
+import SettingServiceForm from "./pages/settings/setting-service/settingServiceForm.tsx";
 
 const router = createBrowserRouter([
   {
@@ -42,12 +45,42 @@ const router = createBrowserRouter([
             element: <SettingPassword />,
           },
           {
+            path: "service",
+            children: [
+              {
+                path: "",
+                element: <SettingService />,
+              },
+              {
+                path: "create",
+                element: <SettingServiceForm />,
+              },
+              {
+                path: ":id",
+                element: <SettingServiceForm />,
+              },
+            ],
+          },
+          {
             path: "note",
             element: <SettingNote />,
           },
           {
             path: "duration",
-            element: <SettingDuration />,
+            children: [
+              {
+                path: "",
+                element: <SettingDuration />,
+              },
+              {
+                path: "create",
+                element: <SettingDurationForm />,
+              },
+              {
+                path: ":id",
+                element: <SettingDurationForm />,
+              },
+            ],
           },
           {
             path: "contact-us",
