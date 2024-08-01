@@ -3,7 +3,7 @@ import { BreadcrumbContext } from "../../../context/breadcrumb";
 import { useParams } from "react-router-dom";
 import { Input } from "../../../components/ui/input";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -16,9 +16,10 @@ import {
 import { Dropdown } from "../../../components/ui/dropdown";
 import { Button } from "../../../components/ui/button";
 
-interface IDurationType {
+interface IDuration {
   id: number;
-  name: string;
+  duration: string;
+  price: number;
 }
 
 const SettingServiceForm = () => {
@@ -27,28 +28,28 @@ const SettingServiceForm = () => {
   const { id } = useParams();
   const formSchema = z.object({
     name: z.string().min(1, { message: "Nama wajib diisi" }),
-    duration: z.string().min(1, { message: "Durasi wajib diisi" }),
-    durationType: z.any(),
+    unit: z.string().min(1, { message: "Satuan wajib diisi" }),
+    duration: z.any(),
   });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      duration: "",
-      durationType: "",
+      unit: "",
+      duration: [
+        {
+          id: 1,
+          duration: "",
+          price: 0,
+        },
+      ],
     },
   });
-  const [durationType, setDurationType] = useState<number>(1);
-  const durationTypes: IDurationType[] = [
-    {
-      id: 1,
-      name: "Jam",
-    },
-    {
-      id: 2,
-      name: "Hari",
-    },
-  ];
+
+  // const { fields, append, remove } = useFieldArray({
+  //   control: form.control,
+  //   name: "duration",
+  // });
 
   useEffect(() => {
     const title: string = id ? "Detail Layanan" : "Buat Layanan";
@@ -62,6 +63,8 @@ const SettingServiceForm = () => {
   const submitForm = (values: z.infer<typeof formSchema>) => {
     console.log("submit", values);
   };
+
+  const addDuration = () => {};
 
   return (
     <div className="mx-4">
@@ -85,49 +88,65 @@ const SettingServiceForm = () => {
             ></FormField>
           </div>
 
-          <div className="mb-3 flex gap-2">
-            <div className="w-[80%]">
-              <FormField
-                control={form.control}
-                name="duration"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Durasi</FormLabel>
+          <div className="mb-3">
+            <FormField
+              control={form.control}
+              name="unit"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Satuan</FormLabel>
 
-                    <FormControl>
-                      <Input type="text" {...field} />
-                    </FormControl>
+                  <FormControl>
+                    <Input type="text" {...field} />
+                  </FormControl>
 
-                    <FormMessage />
-                  </FormItem>
-                )}
-              ></FormField>
-            </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            ></FormField>
+          </div>
 
-            <div className="mt-[33px]">
-              <FormField
-                control={form.control}
-                name="durationType"
-                render={() => (
-                  <FormItem>
-                    <FormControl>
-                      <Dropdown
-                        options={durationTypes}
-                        optionLabel="name"
-                        optionValue="id"
-                        value={durationType}
-                        onOptionSelected={($event) => {
-                          setDurationType($event);
-                          console.log($event);
-                        }}
-                      />
-                    </FormControl>
+          <div className="mb-3 rounded border p-2">
+            {/* <FormField
+              control={form.control}
+              name="duration"
+              render={({ field }) => {
+                durations.map((duration: IDuration) => (
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <FormItem>
+                        <FormLabel>Durasi</FormLabel>
 
-                    <FormMessage />
-                  </FormItem>
-                )}
-              ></FormField>
-            </div>
+                        <FormControl>
+                          <Input type="text" {...field} />
+                        </FormControl>
+
+                        <FormMessage />
+                      </FormItem>
+                    </div>
+
+                    <div>
+                      <FormItem>
+                        <FormLabel>Harga</FormLabel>
+
+                        <FormControl>
+                          <Input type="text" {...field} />
+                        </FormControl>
+
+                        <FormMessage />
+                      </FormItem>
+                    </div>
+                  </div>
+                ));
+              }}
+            ></FormField> */}
+
+            <p
+              className="flex justify-end mt-2 mb-3 cursor-pointer text-watermelon-2"
+              onClick={addDuration}
+            >
+              + Tambah Durasi
+            </p>
           </div>
 
           <Button className="w-full bg-watermelon-2" type="submit">
