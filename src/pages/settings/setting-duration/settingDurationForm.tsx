@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { BreadcrumbContext } from "../../../context/breadcrumb";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Input } from "../../../components/ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -15,30 +15,38 @@ import {
 } from "../../../components/ui/form";
 import { Dropdown } from "../../../components/ui/dropdown";
 import { Button } from "../../../components/ui/button";
+import axios from "axios";
 
 interface IDurationType {
   id: number;
   name: string;
 }
 
+interface IDurationPayload {
+  name: string;
+  duration: number;
+  type: string;
+}
+
 const SettingDurationForm = () => {
   const { setTitle, setShowBackIcon, setPrevPath, setShowTitle } =
     useContext(BreadcrumbContext);
   const { id } = useParams();
+  const navigate = useNavigate();
   const formSchema = z.object({
     name: z.string().min(1, { message: "Nama wajib diisi" }),
-    duration: z.string().min(1, { message: "Durasi wajib diisi" }),
-    durationType: z.any(),
+    duration: z.number().min(1, { message: "Durasi wajib diisi" }),
+    type: z.string(),
   });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      duration: "",
-      durationType: "",
+      duration: 0,
+      type: "",
     },
   });
-  const [durationType, setDurationType] = useState<number>(1);
+
   const durationTypes: IDurationType[] = [
     {
       id: 1,
@@ -57,10 +65,33 @@ const SettingDurationForm = () => {
     setTitle(title);
     setShowBackIcon(true);
     setPrevPath("settings/duration");
+
+    if (id) {
+      populateData();
+    }
   }, []);
 
+  const populateData = () => {
+    const url: string = `${import.meta.env.VITE_API_URL}/duration/${id}`;
+    axios.get(url).then((response: any) => {
+      if (response) {
+        form.reset(response);
+      }
+    });
+  };
+
   const submitForm = (values: z.infer<typeof formSchema>) => {
-    console.log("submit", values);
+    if (id) {
+      const url: string = `${import.meta.env.VITE_API_URL}/duration/${id}`;
+      axios.put(url, values).then(() => {
+        navigate("/settings/duration");
+      });
+    } else {
+      const url: string = `${import.meta.env.VITE_API_URL}/duration`;
+      axios.post(url, values).then(() => {
+        navigate("/settings/duration");
+      });
+    }
   };
 
   return (
@@ -95,7 +126,15 @@ const SettingDurationForm = () => {
                     <FormLabel>Durasi</FormLabel>
 
                     <FormControl>
-                      <Input type="text" {...field} />
+                      <Input
+                        type="number"
+                        onChange={($event) =>
+                          form.setValue(
+                            "duration",
+                            Number(($event.target as HTMLInputElement).value)
+                          )
+                        }
+                      />
                     </FormControl>
 
                     <FormMessage />
@@ -107,18 +146,17 @@ const SettingDurationForm = () => {
             <div className="mt-[33px]">
               <FormField
                 control={form.control}
-                name="durationType"
+                name="type"
                 render={() => (
                   <FormItem>
                     <FormControl>
                       <Dropdown
                         options={durationTypes}
                         optionLabel="name"
-                        optionValue="id"
-                        value={durationType}
+                        optionValue="name"
+                        value={form.getValues("type")}
                         onOptionSelected={($event) => {
-                          setDurationType($event);
-                          console.log($event);
+                          form.setValue("type", $event);
                         }}
                       />
                     </FormControl>

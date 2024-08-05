@@ -5,9 +5,10 @@ import trashIcon from "../../../assets/images/trash-border.svg";
 import addIcon from "../../../assets/images/plus-basic.svg";
 import { useNavigate } from "react-router-dom";
 import { DeleteDialog } from "../../../components/ui/deleteDialog";
+import axios from "axios";
 
 interface ISerivice {
-  id: number;
+  id: string;
   name: string;
 }
 
@@ -15,12 +16,7 @@ const SettingService = () => {
   const { setTitle, setShowBackIcon, setPrevPath, setShowTitle } =
     useContext(BreadcrumbContext);
   const navigate = useNavigate();
-  const dummyService: ISerivice[] = [
-    {
-      id: 1,
-      name: "Test",
-    },
-  ];
+  const [services, setServices] = useState<ISerivice[]>([]);
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
 
   useEffect(() => {
@@ -28,24 +24,32 @@ const SettingService = () => {
     setTitle("Layanan");
     setShowBackIcon(true);
     setPrevPath("settings");
+    populateData();
   }, []);
 
   const createService = () => {
     navigate("create");
   };
 
-  const detailService = (id: number) => {
-    // navigate(`/settings/duration/${id}`);
+  const detailService = (id: string) => {
+    navigate(`/settings/service/${id}`);
+  };
+
+  const populateData = () => {
+    const url: string = `${import.meta.env.VITE_API_URL}/service`;
+    axios.get(url).then((response: any) => setServices(response));
   };
 
   return (
     <>
       <div className="mx-4 h-screen">
-        <Input className="mb-4" placeholder="Pencarian" type="text" />
+        <div className="bg-white sticky top-[115px] pb-4">
+          <Input placeholder="Pencarian" type="text" />
+        </div>
 
-        {dummyService.map((duration: ISerivice) => (
+        {services.map((duration: ISerivice) => (
           <div
-            className="flex justify-between py-3 px-2 border rounded-sm cursor-pointer"
+            className="flex justify-between py-3 px-2 border rounded-sm cursor-pointer mb-2"
             key={duration.id}
             onClick={() => detailService(duration.id)}
           >

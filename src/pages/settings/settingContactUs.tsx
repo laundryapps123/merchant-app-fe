@@ -14,6 +14,7 @@ import {
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 import { Button } from "../../components/ui/button";
+import { useContactUs } from "../../hooks/contact-us/useContactUs";
 
 const SettingContactUs = () => {
   const { setTitle, setShowBackIcon, setPrevPath, setShowTitle } =
@@ -29,6 +30,7 @@ const SettingContactUs = () => {
       message: "",
     },
   });
+  const [isSuccess, sendEmail] = useContactUs();
 
   useEffect(() => {
     setShowTitle(true);
@@ -38,7 +40,16 @@ const SettingContactUs = () => {
   }, []);
 
   const submitForm = (values: z.infer<typeof formSchema>) => {
-    console.log("submit", values);
+    // console.log("submit", values);
+    // const url: string = `${import.meta.env.VITE_API_URL}/email-support`;
+    // axios.post(url, values).then(() => {
+    //   form.reset();
+    // });
+    sendEmail(values);
+
+    // if (isSuccess) {
+    //   form.reset();
+    // }
   };
 
   return (

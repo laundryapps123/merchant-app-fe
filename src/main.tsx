@@ -16,6 +16,7 @@ import SettingDuration from "./pages/settings/setting-duration/settingDuration.t
 import SettingDurationForm from "./pages/settings/setting-duration/settingDurationForm.tsx";
 import SettingService from "./pages/settings/setting-service/settingService.tsx";
 import SettingServiceForm from "./pages/settings/setting-service/settingServiceForm.tsx";
+import axios from "axios";
 
 const router = createBrowserRouter([
   {
@@ -99,6 +100,10 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
+axios.interceptors.response.use((response: any) => {
+  return response.data;
+});
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

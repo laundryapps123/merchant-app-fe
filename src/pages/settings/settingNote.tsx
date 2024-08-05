@@ -12,19 +12,21 @@ import {
   FormItem,
   FormMessage,
 } from "../../components/ui/form";
+import { useUpdateNote } from "../../hooks/note/useUpdateNote";
 
 const SettingNote = () => {
   const { setTitle, setShowBackIcon, setPrevPath, setShowTitle } =
     useContext(BreadcrumbContext);
   const formSchema = z.object({
-    note: z.string().min(1, { message: "Ketentuan wajib diisi" }),
+    notes: z.string().min(1, { message: "Ketentuan wajib diisi" }),
   });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      note: "1. \n2. \n3. ",
+      notes: "1. \n2. \n3. ",
     },
   });
+  const [updateNote] = useUpdateNote();
 
   useEffect(() => {
     setShowTitle(true);
@@ -34,8 +36,9 @@ const SettingNote = () => {
   }, []);
 
   const submitForm = (values: z.infer<typeof formSchema>) => {
-    values.note = generateHtmlTemplate(values.note);
-    console.log("submit", values);
+    values.notes = generateHtmlTemplate(values.notes);
+
+    updateNote(values);
   };
 
   const escapeRegExp = (str: string) => {
@@ -65,7 +68,7 @@ const SettingNote = () => {
           <div className="mb-3">
             <FormField
               control={form.control}
-              name="note"
+              name="notes"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>

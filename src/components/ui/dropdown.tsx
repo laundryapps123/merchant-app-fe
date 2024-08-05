@@ -14,9 +14,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { useState } from "react";
 
 interface IProps {
-  onOptionSelected: (value: number) => void;
+  onOptionSelected: (value: any) => void;
   options: any;
-  value: number;
+  value: any;
   optionLabel: string;
   optionValue: string;
   showSearch?: boolean;
@@ -66,7 +66,7 @@ export const Dropdown = ({
                   onSelect={(currentValue) => {
                     onOptionSelected(
                       options.filter(
-                        (option: any) => option[optionLabel] === currentValue
+                        (option: any) => option[optionValue] === currentValue
                       )[0][optionValue]
                     );
                     setOpen(false);

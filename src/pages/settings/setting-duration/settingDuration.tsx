@@ -5,60 +5,77 @@ import trashIcon from "../../../assets/images/trash-border.svg";
 import addIcon from "../../../assets/images/plus-basic.svg";
 import { useNavigate } from "react-router-dom";
 import { DeleteDialog } from "../../../components/ui/deleteDialog";
+import axios from "axios";
 
 interface IDuration {
-  id: number;
+  created_at: string;
+  duration: number;
+  id: string;
   name: string;
-  duration: string;
+  type: string;
 }
 
 const SettingDuration = () => {
   const { setTitle, setShowBackIcon, setPrevPath, setShowTitle } =
     useContext(BreadcrumbContext);
   const navigate = useNavigate();
-  const dummyDuration: IDuration[] = [
-    {
-      id: 1,
-      name: "Test",
-      duration: "10 Hari",
-    },
-  ];
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
+  const [durations, setDurations] = useState<IDuration[]>([]);
 
   useEffect(() => {
     setShowTitle(true);
     setTitle("Durasi");
     setShowBackIcon(true);
     setPrevPath("settings");
+    populateData();
   }, []);
 
   const createDuration = () => {
     navigate("create");
   };
 
-  const detailDuration = (id: number) => {
-    // navigate(`/settings/duration/${id}`);
+  const detailDuration = (id: string) => {
+    if (showDeleteDialog) {
+      navigate(`/settings/duration/${id}`);
+    }
   };
+
+  const populateData = () => {
+    const url: string = `${import.meta.env.VITE_API_URL}/duration`;
+    axios.get(url).then((response: any) => {
+      setDurations(response);
+    });
+  };
+
+  const openDeleteDialog = () => {
+    setShowDeleteDialog(true);
+    console.log("click", showDeleteDialog);
+  };
+
   return (
     <>
       <div className="mx-4 h-screen">
-        <Input className="mb-4" placeholder="Pencarian" type="text" />
+        <div className="bg-white sticky top-[115px] pb-4">
+          <Input placeholder="Pencarian" type="text" />
+        </div>
 
-        {dummyDuration.map((duration: IDuration) => (
+        {durations.map((duration: IDuration) => (
           <div
-            className="flex justify-between py-3 px-2 border rounded-sm cursor-pointer"
+            className="flex justify-between py-3 px-2 border rounded-sm cursor-pointer z-10 mb-2"
             key={duration.id}
             onClick={() => detailDuration(duration.id)}
           >
             <div className="">
               <p className="font-bold">{duration.name}</p>
-              <p className="text-[10px]">{duration.duration}</p>
+              <p className="text-[10px]">
+                {duration.duration} {duration.type}
+              </p>
             </div>
             <img
-              className="cursor-pointer w-[1.438rem]"
+              className="cursor-pointer w-[1.438rem] z-50"
               src={trashIcon}
               alt="trash"
-              onClick={() => setShowDeleteDialog(true)}
+              onClick={openDeleteDialog}
             />
           </div>
         ))}
