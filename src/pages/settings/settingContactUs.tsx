@@ -45,8 +45,7 @@ const SettingContactUs = () => {
     // axios.post(url, values).then(() => {
     //   form.reset();
     // });
-    sendEmail(values);
-
+    // sendEmail(values);
     // if (isSuccess) {
     //   form.reset();
     // }
