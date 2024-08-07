@@ -5,15 +5,8 @@ import trashIcon from "../../../assets/images/trash-border.svg";
 import addIcon from "../../../assets/images/plus-basic.svg";
 import { useNavigate } from "react-router-dom";
 import { DeleteDialog } from "../../../components/ui/deleteDialog";
-import axios from "axios";
-
-interface IDuration {
-  created_at: string;
-  duration: number;
-  id: string;
-  name: string;
-  type: string;
-}
+import { IDuration } from "../../../types/duration";
+import useGetDuration from "../../../hooks/duration/useGetDuration";
 
 const SettingDuration = () => {
   const { setTitle, setShowBackIcon, setPrevPath, setShowTitle } =
@@ -21,14 +14,18 @@ const SettingDuration = () => {
   const navigate = useNavigate();
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
   const [durations, setDurations] = useState<IDuration[]>([]);
+  const { data } = useGetDuration();
 
   useEffect(() => {
     setShowTitle(true);
     setTitle("Durasi");
     setShowBackIcon(true);
     setPrevPath("settings");
-    populateData();
   }, []);
+
+  useEffect(() => {
+    populateData();
+  }, [data]);
 
   const createDuration = () => {
     navigate("create");
@@ -41,15 +38,11 @@ const SettingDuration = () => {
   };
 
   const populateData = () => {
-    const url: string = `${import.meta.env.VITE_API_URL}/duration`;
-    axios.get(url).then((response: any) => {
-      setDurations(response);
-    });
+    setDurations(data);
   };
 
   const openDeleteDialog = () => {
     setShowDeleteDialog(true);
-    console.log("click", showDeleteDialog);
   };
 
   return (

@@ -16,6 +16,7 @@ import {
 import { Dropdown } from "../../../components/ui/dropdown";
 import { Button } from "../../../components/ui/button";
 import axios from "axios";
+import useGetDetailDuration from "../../../hooks/duration/useGetDetailDuration";
 
 interface IDurationType {
   id: number;

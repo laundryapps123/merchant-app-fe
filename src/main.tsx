@@ -17,6 +17,8 @@ import SettingDurationForm from "./pages/settings/setting-duration/settingDurati
 import SettingService from "./pages/settings/setting-service/settingService.tsx";
 import SettingServiceForm from "./pages/settings/setting-service/settingServiceForm.tsx";
 import axios from "axios";
+import Customers from "./pages/customer/customers.tsx";
+import CustomerForm from "./pages/customer/customerForm.tsx";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +31,23 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <OngoingOrder />,
+      },
+      {
+        path: "customer",
+        children: [
+          {
+            path: "",
+            element: <Customers />,
+          },
+          {
+            path: "create",
+            element: <CustomerForm />,
+          },
+          {
+            path: ":id",
+            element: <CustomerForm />,
+          },
+        ],
       },
       {
         path: "/settings",

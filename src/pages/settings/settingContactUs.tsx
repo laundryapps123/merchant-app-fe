@@ -30,7 +30,7 @@ const SettingContactUs = () => {
       message: "",
     },
   });
-  const [isSuccess, sendEmail] = useContactUs();
+  const { isSuccess, sendEmail } = useContactUs();
 
   useEffect(() => {
     setShowTitle(true);
@@ -39,16 +39,12 @@ const SettingContactUs = () => {
     setPrevPath("settings");
   }, []);
 
+  useEffect(() => {
+    form.reset();
+  }, [isSuccess]);
+
   const submitForm = (values: z.infer<typeof formSchema>) => {
-    // console.log("submit", values);
-    // const url: string = `${import.meta.env.VITE_API_URL}/email-support`;
-    // axios.post(url, values).then(() => {
-    //   form.reset();
-    // });
-    // sendEmail(values);
-    // if (isSuccess) {
-    //   form.reset();
-    // }
+    sendEmail(values);
   };
 
   return (
